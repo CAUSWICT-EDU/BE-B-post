@@ -1,15 +1,16 @@
 package edu.causwict.restapi.repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import edu.causwict.restapi.entity.PostVerification;
-import edu.causwict.restapi.entity.enums.ErrorCode;
+import edu.causwict.restapi.entity.verifications.PostVerification;
 import edu.causwict.restapi.repository.enums.SearchMode;
+import edu.causwict.restapi.repository.utils.GenerateIDUtil;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
@@ -19,20 +20,32 @@ import edu.causwict.restapi.entity.Post;
 public class InMemoryPostRepository {
 
 	private final Map<Long, Post> store = new ConcurrentHashMap<>();
-	private final AtomicLong sequence = new AtomicLong(0);
+	private final GenerateIDUtil<Post> idUtil = new GenerateIDUtil<>();
+	private LocalDateTime lastGenerated = null;
 
-	// 저장
+	/**
+	 * 주어진 Post를 저장합니다.
+	 *
+	 * @param post Post
+	 * @return 저장된 Post를 반환합니다. 만약, 주어진 규칙에 맞지 않는다면 {@code null}을 반환합니다.
+	 */
+	@Nullable
 	public Post save(Post post) {
-		if(PostVerification.getInstance().verify(post, this.findAll()) != ErrorCode.NO_ERROR) {
+		if(PostVerification.verify(post, this) != null) {
 			return null;
 		}
-		if (post.getId() == null) {
-			post.setId(sequence.incrementAndGet());
-		}
+		post = idUtil.generateID(post);
+		lastGenerated = post.getGenerated();
 		store.put(post.getId(), post);
 		return post;
 	}
 
+	/**
+	 * 현재 저장된 모든 Post를 반환합니다.
+	 *
+	 * @return 저장된 모든 Post
+	 */
+	@NonNull
 	public List<Post> findAll() {
 		return new ArrayList<>(store.values());
 	}
@@ -63,6 +76,7 @@ public class InMemoryPostRepository {
 	 * @param mode 검색 모드
 	 * @return 검색된 게시물 리스트를 반환합니다.
 	 */
+	@NonNull
 	public List<Post> search(String keyword, SearchMode mode) {
 		List<Post> postList = findAll();
 		if(mode == SearchMode.FIND_BY_TITLE) {
@@ -78,6 +92,13 @@ public class InMemoryPostRepository {
 		}
 	}
 
-
-
+	/**
+	 * 마지막으로 글을 쓴 시간을 반환합니다.
+	 *
+	 * @return 마지막으로 글을 쓴 시간을 반환합니다. 만약 아무 글도 없다면 {@code null}을 반환합니다.
+	 */
+	@Nullable
+	public LocalDateTime getLastGenerated() {
+		return lastGenerated;
+	}
 }

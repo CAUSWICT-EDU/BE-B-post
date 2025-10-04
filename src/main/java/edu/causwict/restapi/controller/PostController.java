@@ -24,9 +24,8 @@ public class PostController {
 	public Post create(@RequestBody Map<String, Object> param) {
 		String title = (String) param.get("title");
 		String content = (String) param.get("content");
-		Post created = postService.create(title, content);
 
-		return created;
+        return postService.create(title, content);
 	}
 
 	// Edit
