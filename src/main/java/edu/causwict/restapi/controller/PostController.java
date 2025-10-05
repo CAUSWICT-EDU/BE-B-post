@@ -24,10 +24,14 @@ public class PostController {
 	public Post create(@RequestBody Map<String, Object> param) {
 		String title = (String) param.get("title");
 		String content = (String) param.get("content");
+
+        if(title == null || title.trim() == null) return null;
+
 		Post created = postService.create(title, content);
 
 		return created;
 	}
+
 
     // Edit (PATCH /api/posts/{id})
     @PatchMapping("/{id}")
