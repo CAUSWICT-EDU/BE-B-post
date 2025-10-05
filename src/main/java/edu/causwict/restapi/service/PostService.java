@@ -26,6 +26,10 @@ public class PostService {
         return postRepository.edit(id, title, content);
 	}
 
+	public Post get(Long id) {
+		return postRepository.get(id);
+	}
+
 	public List<Post> list() {
 		return postRepository.findAll();
 	}

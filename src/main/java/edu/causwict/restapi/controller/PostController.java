@@ -1,13 +1,18 @@
 package edu.causwict.restapi.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
 import edu.causwict.restapi.repository.enums.SearchMode;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import edu.causwict.restapi.entity.Post;
 import edu.causwict.restapi.service.PostService;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -52,5 +57,34 @@ public class PostController {
 
 		SearchMode searchMode = SearchMode.values()[mode];
 		return postService.search(keyword, searchMode);
+	}
+
+	// Upload
+	@PostMapping("upload")
+	public Post upload(@RequestParam("file") MultipartFile file) throws IOException {
+		InputStream inputStream = file.getInputStream();
+		String s = new String(inputStream.readAllBytes());
+		if(s.isEmpty()) return null;
+
+		String[] bodies = s.split("\n");
+		if(bodies.length == 1) return null;
+
+		String title = bodies[0];
+		String content = s.substring(title.length() + 1);
+
+		return postService.create(title, content);
+	}
+
+	// Download
+	@PostMapping("download")
+	public ResponseEntity<byte[]> download(@RequestBody Map<String, Object> param) {
+		Long id = ((Integer) param.get("id")).longValue();
+		Post post = postService.get(id);
+		if(post == null) return null;
+
+		String s = post.getTitle() + "\n" + post.getContent();
+		return ResponseEntity.ok()
+				.contentType(MediaType.TEXT_PLAIN)
+				.body(s.getBytes());
 	}
 }
