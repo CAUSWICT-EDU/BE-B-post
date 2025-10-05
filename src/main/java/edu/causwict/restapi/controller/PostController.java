@@ -25,9 +25,15 @@ public class PostController {
 		String title = (String) param.get("title");
 		String content = (String) param.get("content");
 
+        //title validation rule
         if(title == null || title.trim() == null) return null;
-
         if (title.length() >= 30) return null;
+
+        //Not allow create post with duplicated title.
+        List<Post> Posts = postService.findAll();
+        for (Post post : Posts) {
+            if (post.getTitle().equals(title)) return null;
+        }
 
 		Post created = postService.create(title, content);
 
