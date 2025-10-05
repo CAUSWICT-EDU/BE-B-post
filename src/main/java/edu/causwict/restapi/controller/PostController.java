@@ -27,6 +27,8 @@ public class PostController {
 
         if(title == null || title.trim() == null) return null;
 
+        if (title.length() >= 30) return null;
+
 		Post created = postService.create(title, content);
 
 		return created;
