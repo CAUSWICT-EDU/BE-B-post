@@ -55,4 +55,11 @@ public class PostController {
     public List<Post> getPosts() {
         return postService.findAll();
     }
+
+    //getPosts(GET /api/posts/search/{keyword})
+    @GetMapping("/search/{keyword}")
+    public List<Post> searchPostsByKeyword(@PathVariable String keyword) {
+        return postService.searchPostsByKeyword(keyword);
+
+    }
 }

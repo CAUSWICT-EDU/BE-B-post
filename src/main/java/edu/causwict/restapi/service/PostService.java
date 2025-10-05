@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import edu.causwict.restapi.entity.Post;
 import edu.causwict.restapi.repository.InMemoryPostRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,11 +39,31 @@ public class PostService {
             return postRepository.save(existingPost);
         }
 
-        return null; // 수정할 게시글이 없는 경우
+        return null;
     }
 
     public List<Post> findAll() {
-
         return postRepository.findAll();
     }
+
+    public List<Post> searchPostsByKeyword(String keyword) {
+        List<Post> allPosts = postRepository.findAll();
+        List<Post> matchingPosts = new ArrayList<>();
+
+
+        String lowerCaseKeyword = keyword.toLowerCase();
+
+        for (Post post : allPosts) {
+            boolean titleMatches = post.getTitle().toLowerCase().contains(lowerCaseKeyword);
+
+
+
+            if (titleMatches) {
+                matchingPosts.add(post);
+            }
+        }
+
+        return matchingPosts;
+    }
+
 }
