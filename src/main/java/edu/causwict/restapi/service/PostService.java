@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import edu.causwict.restapi.entity.Post;
 import edu.causwict.restapi.repository.InMemoryPostRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,5 +39,10 @@ public class PostService {
         }
 
         return null; // 수정할 게시글이 없는 경우
+    }
+
+    public List<Post> findAll() {
+
+        return postRepository.findAll();
     }
 }

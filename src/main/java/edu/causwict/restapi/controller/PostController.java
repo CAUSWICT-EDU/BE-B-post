@@ -1,5 +1,7 @@
 package edu.causwict.restapi.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
@@ -34,5 +36,11 @@ public class PostController {
         String content = (String) param.get("content");
 
         return postService.edit(id, title, content);
+    }
+
+    //getPosts(GET /api/posts)
+    @GetMapping
+    public List<Post> getPosts() {
+        return postService.findAll();
     }
 }
