@@ -1,5 +1,7 @@
 package edu.causwict.restapi.service;
 
+import edu.causwict.restapi.exception.TooManyPostsException;
+import edu.causwict.restapi.util.PostCooldownChecker;
 import org.springframework.stereotype.Service;
 
 import edu.causwict.restapi.entity.Post;
@@ -12,6 +14,8 @@ import java.util.Optional;
 @Service
 public class PostService {
 
+	private final PostCooldownChecker postCooldownChecker = new PostCooldownChecker();
+
 	private final InMemoryPostRepository postRepository;
 
 	public PostService(InMemoryPostRepository postRepository) { // 생성자 주입
@@ -20,8 +24,10 @@ public class PostService {
 
 	public Post create(String title, String content) {
 		validateTitle(title);
+		if (postCooldownChecker.checkCooldown() == false) throw new TooManyPostsException("Too Many Posts");
 
 		Post post = new Post(null, title, content);
+		postCooldownChecker.resetCooldown();
 		return postRepository.save(post);
 	}
 
