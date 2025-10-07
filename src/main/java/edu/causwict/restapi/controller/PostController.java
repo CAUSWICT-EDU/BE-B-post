@@ -1,5 +1,6 @@
 package edu.causwict.restapi.controller;
 
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -39,5 +40,11 @@ public class PostController {
 		} catch (NoSuchElementException e) {
 			throw e; // 임시적으로 이렇게 처리, 나중에 에러 핸들러 같은거 만들어서 수정할 수도
 		}
+	}
+
+	// 게시글 리스트 api
+	@GetMapping
+	public List<Post> getAll() {
+		return postService.getAll();
 	}
 }
