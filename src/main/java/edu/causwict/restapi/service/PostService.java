@@ -20,7 +20,7 @@ public class PostService {
 
 	public Post create(String title, String content) {
 		if (title == null || title.isEmpty()) throw new IllegalArgumentException("title is null or empty");
-		if (postRepository.findByTitle(title).isEmpty()) throw new IllegalArgumentException("title already exists");
+		if (postRepository.findByTitle(title).isPresent()) throw new IllegalArgumentException("title already exists");
 		if (title.length() > 30) throw new IllegalArgumentException("title exceeds 30");
 
 		Post post = new Post(null, title, content);
@@ -39,5 +39,11 @@ public class PostService {
 
 	public List<Post> getAll() {
 		return postRepository.findAll();
+	}
+
+	public List<Post> getPost(String title) {
+		Optional<Post> res = postRepository.findByTitle(title);
+		if (res.isEmpty()) throw new NoSuchElementException("No data found with title: " + title);
+		return List.of(res.get());
 	}
 }

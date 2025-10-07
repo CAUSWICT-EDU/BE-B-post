@@ -48,7 +48,8 @@ public class PostController {
 
 	// 게시글 리스트 api
 	@GetMapping
-	public List<Post> getAll() {
-		return postService.getAll();
+	public List<Post> get(@RequestParam Map<String, Object> param) {
+		if (param.isEmpty()) return postService.getAll(); // 파라미터를 입력하지 않은 경우
+		else return postService.getPost((String) param.get("title"));
 	}
 }
