@@ -55,6 +55,6 @@ public class PostService {
 	private void validateTitle(String title) {
 		if (title == null || title.isEmpty()) throw new IllegalArgumentException("title is null or empty");
 		if (postRepository.findByTitle(title).isPresent()) throw new IllegalArgumentException("title already exists");
-		if (title.length() > 30) throw new IllegalArgumentException("title exceeds 30");
+		if (title.codePointCount(0, title.length()) > 30) throw new IllegalArgumentException("title exceeds 30");
 	}
 }
