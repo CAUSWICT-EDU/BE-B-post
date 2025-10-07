@@ -19,6 +19,10 @@ public class PostService {
 	}
 
 	public Post create(String title, String content) {
+		if (title == null || title.isEmpty()) throw new IllegalArgumentException("title is null or empty");
+		if (postRepository.findByTitle(title).isEmpty()) throw new IllegalArgumentException("title already exists");
+		if (title.length() > 30) throw new IllegalArgumentException("title exceeds 30");
+
 		Post post = new Post(null, title, content);
 		return postRepository.save(post);
 	}

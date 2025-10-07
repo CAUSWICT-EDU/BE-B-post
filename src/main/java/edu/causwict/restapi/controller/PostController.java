@@ -24,9 +24,13 @@ public class PostController {
 	public Post create(@RequestBody Map<String, Object> param) {
 		String title = (String) param.get("title");
 		String content = (String) param.get("content");
-		Post created = postService.create(title, content);
+		try {
+			Post created = postService.create(title, content);
 
-		return created;
+			return created;
+		} catch (IllegalArgumentException e) {
+			throw e; // 임시적으로 이렇게 처리, 나중에 에러 핸들러 같은거 만들어서 수정할 수도
+		}
 	}
 
 	// 게시글 수정 api
