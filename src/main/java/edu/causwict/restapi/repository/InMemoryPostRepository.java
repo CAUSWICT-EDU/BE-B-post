@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import edu.causwict.restapi.entity.verifications.PostVerification;
 import edu.causwict.restapi.utils.GenerateIDUtil;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;

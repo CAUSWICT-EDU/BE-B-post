@@ -34,7 +34,7 @@ public class PostController {
 	}
 
 	// Edit
-	@PostMapping("edit")
+	@PatchMapping("edit")
 	public Post edit(@RequestBody Map<String, Object> param) {
 		Long id = ((Integer) param.get("id")).longValue();
 		String title = (String) param.get("title");
@@ -49,10 +49,10 @@ public class PostController {
 	}
 
 	// Search
-	@PostMapping("search")
-	public List<Post> search(@RequestBody Map<String, Object> param) {
-		String keyword = (String) param.get("keyword");
-		Integer mode = (Integer) param.get("searchMode");
+	@GetMapping("search")
+	public List<Post> search(@RequestParam String keyword, @RequestParam Integer mode) {
+//		String keyword = (String) param.get("keyword");
+//		Integer mode = (Integer) param.get("searchMode");
 		if(mode < 0 || mode >= SearchMode.values().length) return null;
 
 		SearchMode searchMode = SearchMode.values()[mode];
@@ -76,9 +76,8 @@ public class PostController {
 	}
 
 	// Download
-	@PostMapping("download")
-	public ResponseEntity<byte[]> download(@RequestBody Map<String, Object> param) {
-		Long id = ((Integer) param.get("id")).longValue();
+	@GetMapping("download")
+	public ResponseEntity<byte[]> download(@RequestParam Long id) {
 		Post post = postService.get(id);
 		if(post == null) return null;
 
