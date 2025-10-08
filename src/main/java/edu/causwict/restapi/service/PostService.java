@@ -1,6 +1,7 @@
 package edu.causwict.restapi.service;
 
 import edu.causwict.restapi.exception.TooManyPostsException;
+import edu.causwict.restapi.util.MockPostCooldownChecker;
 import edu.causwict.restapi.util.PostCooldownChecker;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.Optional;
 @Service
 public class PostService {
 
-	private final PostCooldownChecker postCooldownChecker = new PostCooldownChecker();
+	private final PostCooldownChecker postCooldownChecker = new MockPostCooldownChecker();
 
 	private final InMemoryPostRepository postRepository;
 
