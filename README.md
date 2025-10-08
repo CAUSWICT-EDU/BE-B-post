@@ -14,14 +14,14 @@
 - [x]   게시글 검색 기능을 추가해주세요. (예: 제목 키워드로 검색)
 
 ## 실행 결과
-![img.png](img.png)
-![img.png](img_2.png)
-![img_1.png](img_1.png)
-![img_3.png](img_3.png)
-![img_4.png](img_4.png)
-![img_5.png](img_5.png)
-![img_6.png](img_6.png)
-![img_7.png](img_7.png)
+![img.png](doc/img.png)
+![img.png](doc/img_2.png)
+![img_1.png](doc/img_1.png)
+![img_3.png](doc/img_3.png)
+![img_4.png](doc/img_4.png)
+![img_5.png](doc/img_5.png)
+![img_6.png](doc/img_6.png)
+![img_7.png](doc/img_7.png)
 
 ## 키워드 과제 정리
 SOLID 원칙: 유지보수와 확장이 쉬운 유연한 소프트웨어를 만들기 위한 객체 지향 설계의 다섯 가지 기본 원칙입니다.
