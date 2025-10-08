@@ -1,6 +1,9 @@
 package edu.causwict.restapi.entity;
 
 public class Post {
+
+    //변경사항 없음
+
 	private Long id;
 	private String title;
 	private String content;

@@ -14,6 +14,8 @@ import edu.causwict.restapi.service.PostService;
 @RequestMapping("/api/posts")
 public class PostController {
 
+    //
+
 	private final PostService postService;
 
 	public PostController(PostService postService) {
@@ -21,6 +23,7 @@ public class PostController {
 	}
 
 	// Create
+    //
 	@PostMapping
 	public Post create(@RequestBody Map<String, Object> param) {
 		String title = (String) param.get("title");
