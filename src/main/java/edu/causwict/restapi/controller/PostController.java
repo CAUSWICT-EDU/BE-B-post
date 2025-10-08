@@ -51,9 +51,7 @@ public class PostController {
 	// Search
 	@GetMapping("search")
 	public List<Post> search(@RequestParam String keyword, @RequestParam Integer mode) {
-//		String keyword = (String) param.get("keyword");
-//		Integer mode = (Integer) param.get("searchMode");
-		if(mode < 0 || mode >= SearchMode.values().length) return null;
+        if(mode < 0 || mode >= SearchMode.values().length) return null;
 
 		SearchMode searchMode = SearchMode.values()[mode];
 		return postService.search(keyword, searchMode);

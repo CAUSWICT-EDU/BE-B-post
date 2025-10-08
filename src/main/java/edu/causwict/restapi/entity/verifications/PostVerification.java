@@ -3,6 +3,7 @@ package edu.causwict.restapi.entity.verifications;
 import edu.causwict.restapi.entity.Post;
 import edu.causwict.restapi.entity.enums.ErrorCode;
 import edu.causwict.restapi.repository.InMemoryPostRepository;
+import edu.causwict.restapi.utils.GraphemeLengthUtil;
 import org.springframework.lang.Nullable;
 
 import java.time.Duration;
@@ -23,7 +24,9 @@ public class PostVerification {
         if(post.getTitle().isEmpty()) {
             return ErrorCode.TITLE_IS_EMPTY;
         }
-        if(post.getTitle().length() > 30) {
+        if(GraphemeLengthUtil.getGraphemeLength(post.getTitle()) > 30) {
+            System.out.println(post.getTitle());
+            System.out.println(GraphemeLengthUtil.getGraphemeLength(post.getTitle()));
             return ErrorCode.TITLE_IS_TOO_LONG;
         }
 

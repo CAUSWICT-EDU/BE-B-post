@@ -31,6 +31,7 @@ public class PostService {
 	@Nullable
 	public Post create(String title, String content) {
 		Post post = new Post(null, title, content);
+		System.out.println(PostVerification.verify(post, postRepository));
 		if(PostVerification.verify(post, postRepository) != null) {
 			return null;
 		}
