@@ -17,7 +17,7 @@ public class PostService {
 
 	private final InMemoryPostRepository postRepository;
 
-	private final PostCooldownChecker postCooldownChecker = new MockPostCooldownChecker();
+	private final PostCooldownChecker postCooldownChecker = new PostCooldownChecker();
 	private final CreateTitleValidator createTitleValidator = new CreateTitleValidator();
 	private final UpdateTitleValidator updateTitleValidator = new UpdateTitleValidator();
 
