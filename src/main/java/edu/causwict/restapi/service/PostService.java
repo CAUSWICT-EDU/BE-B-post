@@ -40,11 +40,13 @@ public class PostService {
 
 	/**
 	 * 주어진 id의 Post 객체를 수정합니다.
+	 * <br>
+	 * (참고) 도배 방지 규칙은 무시합니다.
 	 *
 	 * @param id id
 	 * @param title 새로 수정할 제목
 	 * @param content 새로 수정할 내용
-	 * @return 만약 수정에 성공했다면 성공한 Post 객체를 반환합니다. 만약 해당 id의 Post를 찾을 수 없다면 {@code null}을 반환합니다.
+	 * @return 수정한 Post 객체를 반환합니다. 만약 새로 수정한 Post가 규칙에 맞지 않는다면 수정 전 Post 객체를 반환합니다. 만약 해당 id의 Post를 찾을 수 없다면 {@code null}을 반환합니다.
 	 */
 	@Nullable
 	public Post edit(Long id, String title, String content) {
@@ -52,8 +54,18 @@ public class PostService {
 		if(post == null) {
 			return null;
 		}
+
+		String temp_title = post.getTitle();
+		String temp_content = post.getContent();
+
 		if(title != null) post.setTitle(title);
 		if(content != null) post.setContent(content);
+
+		if(PostVerification.verify(post, postRepository) != null) {
+			post.setTitle(temp_title);
+			post.setContent(temp_content);
+		}
+
 		return post;
 	}
 
