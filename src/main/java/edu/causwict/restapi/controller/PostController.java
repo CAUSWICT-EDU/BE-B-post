@@ -39,6 +39,7 @@ public class PostController {
 		Long id = ((Integer) param.get("id")).longValue();
 		String title = (String) param.get("title");
 		String content = (String) param.get("content");
+
 		return postService.edit(id, title, content);
 	}
 
@@ -77,9 +78,8 @@ public class PostController {
 	@GetMapping("download")
 	public ResponseEntity<byte[]> download(@RequestParam Long id) {
 		Post post = postService.get(id);
-		if(post == null) return null;
 
-		String s = post.getTitle() + "\n" + post.getContent();
+        String s = post.getTitle() + "\n" + post.getContent();
 		return ResponseEntity.ok()
 				.contentType(MediaType.TEXT_PLAIN)
 				.body(s.getBytes());

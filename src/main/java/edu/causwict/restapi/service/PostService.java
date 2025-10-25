@@ -1,5 +1,6 @@
 package edu.causwict.restapi.service;
 
+import edu.causwict.restapi.entity.enums.ErrorCode;
 import edu.causwict.restapi.entity.verifications.PostVerification;
 import edu.causwict.restapi.repository.enums.SearchMode;
 import org.springframework.lang.NonNull;
@@ -26,14 +27,15 @@ public class PostService {
 	 *
 	 * @param title Post의 제목
 	 * @param content Post의 내용
-	 * @return 저장된 Post를 반환합니다. 만약, 주어진 규칙에 맞지 않는다면 {@code null}을 반환합니다.
+	 * @return 저장된 Post를 반환합니다.
+	 * @throws IllegalArgumentException 만약 주어진 규칙에 맞지 않으면 발생합니다.
 	 */
-	@Nullable
-	public Post create(String title, String content) {
+	@NonNull
+	public Post create(String title, String content) throws IllegalArgumentException {
 		Post post = new Post(null, title, content);
-		System.out.println(PostVerification.verify(post, postRepository));
-		if(PostVerification.verify(post, postRepository) != null) {
-			return null;
+		ErrorCode errorCode = PostVerification.verify(post, postRepository);
+		if(errorCode != null) {
+			throw new IllegalArgumentException(errorCode.getErrorMessage());
 		}
 		return postRepository.save(post);
 	}
@@ -46,24 +48,23 @@ public class PostService {
 	 * @param id id
 	 * @param title 새로 수정할 제목
 	 * @param content 새로 수정할 내용
-	 * @return 수정한 Post 객체를 반환합니다. 만약 새로 수정한 Post가 규칙에 맞지 않는다면 수정 전 Post 객체를 반환합니다. 만약 해당 id의 Post를 찾을 수 없다면 {@code null}을 반환합니다.
+	 * @return 수정한 Post 객체를 반환합니다. 만약 새로 수정한 Post가 규칙에 맞지 않는다면 수정 전 Post 객체를 반환합니다.
 	 */
 	@Nullable
 	public Post edit(Long id, String title, String content) {
 		Post post = postRepository.findById(id);
-		if(post == null) {
-			return null;
-		}
 
-		String temp_title = post.getTitle();
+        String temp_title = post.getTitle();
 		String temp_content = post.getContent();
 
 		if(title != null) post.setTitle(title);
 		if(content != null) post.setContent(content);
 
-		if(PostVerification.verify(post, postRepository) != null) {
+		ErrorCode errorCode = PostVerification.verify(post, postRepository);
+		if(errorCode != null && errorCode != ErrorCode.SPAMMING) {
 			post.setTitle(temp_title);
 			post.setContent(temp_content);
+			throw new IllegalArgumentException(errorCode.getErrorMessage());
 		}
 
 		return post;
@@ -75,7 +76,7 @@ public class PostService {
 	 * @param id 글의 ID
 	 * @return 해당하는 ID의 Post를 반환합니다. 만약 없다면 {@code null}을 반환합니다.
 	 */
-	@Nullable
+	@NonNull
 	public Post get(Long id) {
 		return postRepository.findById(id);
 	}

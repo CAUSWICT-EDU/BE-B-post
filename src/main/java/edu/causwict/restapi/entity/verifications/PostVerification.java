@@ -4,6 +4,7 @@ import edu.causwict.restapi.entity.Post;
 import edu.causwict.restapi.entity.enums.ErrorCode;
 import edu.causwict.restapi.repository.InMemoryPostRepository;
 import edu.causwict.restapi.utils.GraphemeLengthUtil;
+import edu.causwict.restapi.utils.TimeUtil;
 import org.springframework.lang.Nullable;
 
 import java.time.Duration;
@@ -11,6 +12,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PostVerification {
+
+    /**
+     * 게시글 사이 최소 시간 간격입니다. 단위는 초(s)입니다.
+     */
+    private static final long SPAMMING_DETECTION_TIME = TimeUtil.toSecond(0, 3);
 
     /**
      * 주어진 Post가 규칙에 맞는지 확인합니다.
@@ -24,26 +30,26 @@ public class PostVerification {
         if(post.getTitle().isEmpty()) {
             return ErrorCode.TITLE_IS_EMPTY;
         }
+
         if(GraphemeLengthUtil.getGraphemeLength(post.getTitle()) > 30) {
-            System.out.println(post.getTitle());
-            System.out.println(GraphemeLengthUtil.getGraphemeLength(post.getTitle()));
             return ErrorCode.TITLE_IS_TOO_LONG;
         }
 
         List<Post> postList = repository.findAll();
-        if(postList.stream().map(Post::getTitle)
+        // 게시물 수정 시 자기 자신의 제목은 제외하도록 함. 생성 시에는 id가 null 이므로 해당 없음.
+        if(postList.stream().filter(p -> !p.getId().equals(post.getId())).map(Post::getTitle)
                 .collect(Collectors.toSet()).contains(post.getTitle())) {
             return ErrorCode.TITLE_ALREADY_EXIST;
         }
 
         if(repository.getLastGenerated() != null) {
             Duration duration = Duration.between(repository.getLastGenerated(), post.getGenerated());
-            System.out.println(duration.toString());
-            if(duration.toMinutes() < 3 && duration.toHours() < 1 && duration.toDays() < 1) {
+            if(duration.compareTo(Duration.ofSeconds(SPAMMING_DETECTION_TIME)) < 0) {
                 return ErrorCode.SPAMMING;
             }
         }
 
         return null;
     }
+
 }

@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 
+import edu.causwict.restapi.repository.enums.ErrorCode;
 import edu.causwict.restapi.utils.GenerateIDUtil;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -48,9 +50,15 @@ public class InMemoryPostRepository {
 	 * 주어진 ID를 갖는 Post를 반환합니다.
 	 *
 	 * @param id 글의 ID
-	 * @return 해당하는 ID의 Post를 반환합니다. 만약 없다면 {@code null}을 반환합니다.
+	 * @return 해당하는 ID의 Post를 반환합니다.
+	 * @throws NoSuchElementException 만약 해당 ID의 Post가 존재하지 않을 경우 발생합니다.
 	 */
-	public Post findById(Long id) {
+	@NonNull
+	public Post findById(Long id) throws NoSuchElementException {
+		Post post = store.get(id);
+		if(post == null) {
+			throw new NoSuchElementException(ErrorCode.NO_SUCH_ID_POST.getErrorMessage());
+		}
 		return store.get(id);
 	}
 
@@ -63,4 +71,5 @@ public class InMemoryPostRepository {
 	public LocalDateTime getLastGenerated() {
 		return lastGenerated;
 	}
+
 }
