@@ -3,6 +3,7 @@ package edu.causwict.restapi.repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -23,6 +24,10 @@ public class InMemoryPostRepository {
 		store.put(post.getId(), post);
 		return post;
 	}
+
+    public Optional<Post> findById(Long id) {
+        return Optional.ofNullable(store.get(id));
+    }
 
 	public List<Post> findAll() {
 		return new ArrayList<>(store.values());
