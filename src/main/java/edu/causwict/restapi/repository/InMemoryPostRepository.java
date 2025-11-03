@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
@@ -24,8 +26,34 @@ public class InMemoryPostRepository {
 		return post;
 	}
 
+    // ID로 Post를 찾는 메서드 추가
+    public Optional<Post> findById(Long id) {
+        return Optional.ofNullable(store.get(id));
+    }
+
+    // Post를 업데이트하는 메서드 추가
+    public Post update(Long id, Post post) {
+        store.put(id, post);
+        return post;
+    }
+
 	public List<Post> findAll() {
 		return new ArrayList<>(store.values());
 	}
+
+    // 제목으로 Post를 찾는 메서드 추가
+    public Optional<Post> findByTitle(String title) {
+        return store.values().stream()
+                .filter(post -> post.getTitle().equals(title))
+                .findAny();
+    }
+
+    // 제목에 키워드가 포함된 Post를 찾는 메서드 추가
+    public List<Post> findByTitleContaining(String keyword) {
+        return store.values().stream()
+                .filter(post -> post.getTitle().contains(keyword))
+                .collect(Collectors.toList());
+    }
+
 
 }
