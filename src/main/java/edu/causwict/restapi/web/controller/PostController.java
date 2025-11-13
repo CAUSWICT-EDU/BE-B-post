@@ -1,13 +1,12 @@
-package edu.causwict.restapi.controller;
+package edu.causwict.restapi.web.controller;
 
-
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.web.bind.annotation.*;
 
 import edu.causwict.restapi.entity.Post;
 import edu.causwict.restapi.service.PostService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/posts")
