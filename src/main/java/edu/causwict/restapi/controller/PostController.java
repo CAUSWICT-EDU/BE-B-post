@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 
 import org.springframework.web.bind.annotation.*;
 
-import edu.causwict.restapi.entity.Post;
+import edu.causwict.restapi.domain.Post;
 import edu.causwict.restapi.service.PostService;
 
 @RestController

@@ -1,11 +1,10 @@
 package edu.causwict.restapi.service;
 
 import edu.causwict.restapi.exception.TooManyPostsException;
-import edu.causwict.restapi.util.MockPostCooldownChecker;
 import edu.causwict.restapi.util.PostCooldownChecker;
 import org.springframework.stereotype.Service;
 
-import edu.causwict.restapi.entity.Post;
+import edu.causwict.restapi.domain.Post;
 import edu.causwict.restapi.repository.InMemoryPostRepository;
 
 import java.util.List;

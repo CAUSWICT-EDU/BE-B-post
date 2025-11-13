@@ -1,7 +1,21 @@
-package edu.causwict.restapi.entity;
+package edu.causwict.restapi.domain;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
 public class Post {
+	@Id
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
+
+	// 외래키
+	private Long professor_id;
+	private Long subject_id;
+
 	private String title;
 	private String content;
 
