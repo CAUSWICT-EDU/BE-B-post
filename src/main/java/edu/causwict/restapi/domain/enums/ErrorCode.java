@@ -1,5 +1,8 @@
-package edu.causwict.restapi.entity.enums;
+package edu.causwict.restapi.domain.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum ErrorCode {
     NO_ERROR("오류가 발견되지 않았습니다"),
     TITLE_IS_EMPTY("제목이 비어 있습니다"),
@@ -13,7 +16,4 @@ public enum ErrorCode {
         this.errorMessage = errorMessage;
     }
 
-    public String getErrorMessage() {
-        return this.errorMessage;
-    }
 }

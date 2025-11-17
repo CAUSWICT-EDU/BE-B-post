@@ -1,6 +1,6 @@
 package edu.causwict.restapi.utils;
 
-import edu.causwict.restapi.entity.BaseEntity;
+import edu.causwict.restapi.domain.common.BaseEntity;
 
 import java.util.concurrent.atomic.AtomicLong;
 

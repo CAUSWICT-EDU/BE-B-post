@@ -13,7 +13,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
-import edu.causwict.restapi.entity.Post;
+import edu.causwict.restapi.domain.Post;
 
 @Repository
 public class InMemoryPostRepository {
@@ -31,7 +31,7 @@ public class InMemoryPostRepository {
 	@NonNull
 	public Post save(Post post) {
 		idUtil.generateID(post);
-		lastGenerated = post.getGenerated();
+		lastGenerated = post.getCreatedAt();
 		store.put(post.getId(), post);
 		return post;
 	}
