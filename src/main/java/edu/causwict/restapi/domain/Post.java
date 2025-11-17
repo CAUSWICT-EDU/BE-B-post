@@ -1,38 +1,42 @@
 package edu.causwict.restapi.domain;
 
+import edu.causwict.restapi.domain.enums.SemesterType;
+import edu.causwict.restapi.domain.enums.TermType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+import java.time.LocalDateTime;
+
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Post {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
 
-	// 외래키
-	private Long professor_id;
-	private Long subject_id;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "professor_id")
+	private Professor professor;
 
-	private String title;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name = "member_id")
+	private Member member;
+
+	@Column(nullable=false, length = 1000)
 	private String content;
 
-	public Post() {}
+	@Column(nullable=false)
+	private Short year;
 
-	public Post(Long id, String title, String content) {
-		this.id = id;
-		this.title = title;
-		this.content = content;
-	}
+	@Enumerated(EnumType.STRING)
+	private SemesterType semester;
 
-	public Long getId() { return id; }
-	public void setId(Long id) { this.id = id; }
+	@Enumerated(EnumType.STRING)
+	private TermType term;
 
-	public String getTitle() { return title; }
-	public void setTitle(String title) { this.title = title; }
-
-	public String getContent() { return content; }
-	public void setContent(String content) { this.content = content; }
+	@Column
+	private LocalDateTime deleted_at;
 }

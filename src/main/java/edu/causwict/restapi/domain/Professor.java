@@ -1,29 +1,24 @@
 package edu.causwict.restapi.domain;
 
+import edu.causwict.restapi.domain.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
-@Getter
-@Setter
 @Entity
+@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Professor {
+public class Professor extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(length = 20)
     private String name;
 
     @Column
-    private Timestamp created_at;
-
-    @Column
-    private Timestamp deleted_at;
+    private LocalDateTime deleted_at;
 }

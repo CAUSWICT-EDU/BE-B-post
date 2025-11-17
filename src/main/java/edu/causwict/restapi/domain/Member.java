@@ -1,30 +1,25 @@
 package edu.causwict.restapi.domain;
 
+import edu.causwict.restapi.domain.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 // 이전에 엔티티 이름을 User로 했다가 어디랑 이름이 겹쳐서 Member로 변경
-@Getter
-@Setter
 @Entity
+@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
+
+    @Column(length = 20)
+    private String name;
 
     @Column
-    String name;
-
-    @Column
-    Timestamp created_at;
-
-    @Column
-    Timestamp deleted_at;
+    private LocalDateTime deleted_at;
 }
