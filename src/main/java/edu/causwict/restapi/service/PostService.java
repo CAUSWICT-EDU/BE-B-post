@@ -1,13 +1,13 @@
 package edu.causwict.restapi.service;
 
-import edu.causwict.restapi.entity.enums.ErrorCode;
-import edu.causwict.restapi.entity.verifications.PostVerification;
+import edu.causwict.restapi.domain.enums.ErrorCode;
+import edu.causwict.restapi.domain.verifications.PostVerification;
 import edu.causwict.restapi.repository.enums.SearchMode;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
-import edu.causwict.restapi.entity.Post;
+import edu.causwict.restapi.domain.Post;
 import edu.causwict.restapi.repository.InMemoryPostRepository;
 
 import java.util.List;
@@ -30,11 +30,10 @@ public class PostService {
 	 * @return 저장된 Post를 반환합니다.
 	 * @throws IllegalArgumentException 만약 주어진 규칙에 맞지 않으면 발생합니다.
 	 */
-	@NonNull
-	public Post create(String title, String content) throws IllegalArgumentException {
+	public @NonNull Post create(String title, String content) throws IllegalArgumentException {
 		Post post = new Post(null, title, content);
-		ErrorCode errorCode = PostVerification.verify(post, postRepository);
-		if(errorCode != null) {
+		ErrorCode errorCode = PostVerification.createVerify(post, postRepository);
+		if(errorCode != ErrorCode.NO_ERROR) {
 			throw new IllegalArgumentException(errorCode.getErrorMessage());
 		}
 		return postRepository.save(post);
@@ -50,20 +49,16 @@ public class PostService {
 	 * @param content 새로 수정할 내용
 	 * @return 수정한 Post 객체를 반환합니다. 만약 새로 수정한 Post가 규칙에 맞지 않는다면 수정 전 Post 객체를 반환합니다.
 	 */
-	@Nullable
-	public Post edit(Long id, String title, String content) {
+
+	public @Nullable Post edit(Long id, String title, String content) {
 		Post post = postRepository.findById(id);
+		Post editedPost = new Post(id, title, content);
 
-        String temp_title = post.getTitle();
-		String temp_content = post.getContent();
+		ErrorCode errorCode = PostVerification.updateVerify(editedPost, postRepository);
 
-		if(title != null) post.setTitle(title);
-		if(content != null) post.setContent(content);
-
-		ErrorCode errorCode = PostVerification.verify(post, postRepository);
-		if(errorCode != null && errorCode != ErrorCode.SPAMMING) {
-			post.setTitle(temp_title);
-			post.setContent(temp_content);
+		if(errorCode != ErrorCode.NO_ERROR && errorCode != ErrorCode.SPAMMING) {
+			post.setTitle(title);
+			post.setContent(content);
 			throw new IllegalArgumentException(errorCode.getErrorMessage());
 		}
 

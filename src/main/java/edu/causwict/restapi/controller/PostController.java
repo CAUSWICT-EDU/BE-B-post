@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import edu.causwict.restapi.entity.Post;
+import edu.causwict.restapi.domain.Post;
 import edu.causwict.restapi.service.PostService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,11 +51,8 @@ public class PostController {
 
 	// Search
 	@GetMapping("search")
-	public List<Post> search(@RequestParam String keyword, @RequestParam Integer mode) {
-        if(mode < 0 || mode >= SearchMode.values().length) return null;
-
-		SearchMode searchMode = SearchMode.values()[mode];
-		return postService.search(keyword, searchMode);
+	public List<Post> search(@RequestParam String keyword, @RequestParam SearchMode mode) {
+		return postService.search(keyword, mode);
 	}
 
 	// Upload
