@@ -5,12 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 import edu.causwict.restapi.util.IdGenerator;
 import org.springframework.stereotype.Repository;
 
-import edu.causwict.restapi.entity.Post;
+import edu.causwict.restapi.domain.Post;
 
 @Repository
 public class InMemoryPostRepository {
@@ -26,11 +25,15 @@ public class InMemoryPostRepository {
 		return post;
 	}
 
-	public Optional<Post> findByTitle(String title) {
+	public Optional<Post> findById(Long id) {
+		return Optional.ofNullable(store.get(id));
+	}
+
+	/*public Optional<Post> findByTitle(String title) {
         return store.values().stream()
                 .filter(e -> e.getTitle().equals(title))
 				.findFirst();
-	}
+	}*/
 
 	public List<Post> findAll() {
 		return new ArrayList<>(store.values());

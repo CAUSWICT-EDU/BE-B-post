@@ -1,11 +1,12 @@
 package edu.causwict.restapi.service;
 
+import edu.causwict.restapi.domain.enums.TermType;
+import edu.causwict.restapi.domain.enums.SemesterType;
 import edu.causwict.restapi.exception.TooManyPostsException;
-import edu.causwict.restapi.util.MockPostCooldownChecker;
 import edu.causwict.restapi.util.PostCooldownChecker;
 import org.springframework.stereotype.Service;
 
-import edu.causwict.restapi.entity.Post;
+import edu.causwict.restapi.domain.Post;
 import edu.causwict.restapi.repository.InMemoryPostRepository;
 
 import java.util.List;
@@ -29,29 +30,36 @@ public class PostService {
 		createTitleValidator.validateTitle(title, postRepository);
 		if (postCooldownChecker.checkCooldown() == false) throw new TooManyPostsException("Too Many Posts");
 
-		Post post = new Post(null, title, content);
+		Post post = Post.builder()
+				.professor(null)
+				.subject(null)
+				.content(content)
+				.year((short) 2025)
+				.semester(SemesterType.SECOND)
+				.term(TermType.FINAL)
+				.build();
+
 		postCooldownChecker.resetCooldown();
 		return postRepository.save(post);
 	}
 
-    public Post update(String title, String content) {
+    /*public Post update(String id, String content) {
 		Optional<Post> res = postRepository.findByTitle(title);
 		updateTitleValidator.validateTitle(title);
 		if (res.isEmpty()) throw new NoSuchElementException("No data found with title: " + title);
 
 		Post post = res.get();
-		post.setTitle(title);
-		post.setContent(content);
+		post.updateContent(content);
 		return post;
-    }
+    }*/
 
 	public List<Post> getAll() {
 		return postRepository.findAll();
 	}
 
-	public List<Post> getPost(String title) {
-		Optional<Post> res = postRepository.findByTitle(title);
-		if (res.isEmpty()) throw new NoSuchElementException("No data found with title: " + title);
+	public List<Post> getPost(Long id) {
+		Optional<Post> res = postRepository.findById(id);
+		if (res.isEmpty()) throw new NoSuchElementException("No data found with id: " + id);
 		return List.of(res.get());
 	}
 }
@@ -65,8 +73,8 @@ class TitleValidation {
 
 class CreateTitleValidator extends TitleValidation {
 	public void validateTitle(String title, InMemoryPostRepository postRepository) {
-		if (postRepository.findByTitle(title).isPresent()) throw new IllegalArgumentException("title already exists");
-		super.validateTitle(title);
+		/*if (postRepository.findByTitle(title).isPresent()) throw new IllegalArgumentException("title already exists");
+		super.validateTitle(title);*/
 	}
 
 	public CreateTitleValidator() {}
