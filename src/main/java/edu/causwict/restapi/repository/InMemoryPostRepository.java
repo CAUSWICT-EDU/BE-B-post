@@ -25,11 +25,15 @@ public class InMemoryPostRepository {
 		return post;
 	}
 
-	public Optional<Post> findByTitle(String title) {
+	public Optional<Post> findById(Long id) {
+		return Optional.ofNullable(store.get(id));
+	}
+
+	/*public Optional<Post> findByTitle(String title) {
         return store.values().stream()
                 .filter(e -> e.getTitle().equals(title))
 				.findFirst();
-	}
+	}*/
 
 	public List<Post> findAll() {
 		return new ArrayList<>(store.values());

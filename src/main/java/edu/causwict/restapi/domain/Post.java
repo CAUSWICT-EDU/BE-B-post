@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -22,8 +23,8 @@ public class Post {
 	private Professor professor;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "member_id")
-	private Member member;
+	@JoinColumn(name = "subject_id")
+	private Subject subject;
 
 	@Column(nullable=false, length = 1000)
 	private String content;
@@ -39,4 +40,9 @@ public class Post {
 
 	@Column
 	private LocalDateTime deleted_at;
+
+	public void updateContent(String new_content) { this.content = new_content; }
+
+	public void delete() { this.deleted_at = LocalDateTime.now(); }
+
 }
