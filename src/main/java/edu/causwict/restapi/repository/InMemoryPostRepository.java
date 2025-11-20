@@ -28,4 +28,20 @@ public class InMemoryPostRepository {
 		return new ArrayList<>(store.values());
 	}
 
+	// Find By exact Title - 정확한 제목을 통해서 게시글 찾기
+	public Post findByTitle(String title) {
+		return store.values().stream()
+				.filter(post -> post.getTitle().equals(title))
+				.findFirst().orElse(null);
+	}
+
+	// Find by title keyword - 제목에 포함된 단어(키워드)를 통해서 게시글 찾기
+	public List<Post> findByTitleKeyword(String keyword) {
+		return store.values().stream()
+				.filter(post -> post.getTitle().contains(keyword))
+				.toList();
+	}
+
+	// Find By Id - id 통해서 게시글 찾기
+	public Post findById(Long id) { return store.get(id); }
 }
