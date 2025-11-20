@@ -1,24 +1,53 @@
 package edu.causwict.restapi.entity;
 
-public class Post {
-	private Long id;
-	private String title;
-	private String content;
+import edu.causwict.restapi.entity.common.BaseEntity;
+import edu.causwict.restapi.entity.mapping.Comment;
+import edu.causwict.restapi.entity.mapping.PostLike;
+import jakarta.persistence.*;
+import lombok.*;
 
-	public Post() {}
+import java.util.ArrayList;
+import java.util.List;
 
-	public Post(Long id, String title, String content) {
-		this.id = id;
-		this.title = title;
-		this.content = content;
-	}
+@Entity
+@Table(name = "posts")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Post extends BaseEntity {
 
-	public Long getId() { return id; }
-	public void setId(Long id) { this.id = id; }
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	public String getTitle() { return title; }
-	public void setTitle(String title) { this.title = title; }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id") // FK 컬럼명 지정
+    private User user;
 
-	public String getContent() { return content; }
-	public void setContent(String content) { this.content = content; }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
+
+    @Column(nullable = false, length = 100)
+    private String title;
+
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<PostLike> likes = new ArrayList<>();
+
+    @Builder
+    public Post(User user, Board board, String title, String content) {
+        this.user = user;
+        this.board = board;
+        this.title = title;
+        this.content = content;
+    }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
